@@ -8,15 +8,29 @@ interface MyStack<L> {
     fun push(item: L)
 
     class FIFO<L>(maxCount: Int) : Base<L>(maxCount) {
+        override val objectList: ArrayList<L> = ArrayList(maxCount)
 
         override fun pop(): L {
-            return super.popFIFO()
+            try {
+                val item = objectList[0]
+                objectList.remove(item)
+                return item
+            } catch (e: Exception) {
+                throw IllegalStateException()
+            }
         }
     }
 
     class LIFO<L>(maxCount: Int) : Base<L>(maxCount) {
+        override val objectList: ArrayList<L> = ArrayList(maxCount)
         override fun pop(): L {
-            return super.popLIFO()
+            try {
+                val item = objectList[objectList.size - 1]
+                objectList.remove(item)
+                return item
+            } catch (e: Exception) {
+                throw IllegalStateException()
+            }
         }
     }
 
@@ -24,31 +38,10 @@ interface MyStack<L> {
 
 abstract class Base<L>(maxCount: Int): MyStack<L>{
 
-    private val objectList: ArrayList<L>
+    abstract val objectList: ArrayList<L>
 
     init {
         if (maxCount <= 0) throw IllegalStateException()
-        objectList = ArrayList(maxCount)
-    }
-
-    fun popFIFO(): L {
-        try {
-            val item = objectList[0]
-            objectList.remove(item)
-            return item
-        } catch (e: Exception) {
-            throw IllegalStateException()
-        }
-    }
-
-    fun popLIFO(): L {
-        try {
-            val item = objectList[objectList.size - 1]
-            objectList.remove(item)
-            return item
-        } catch (e: Exception) {
-            throw IllegalStateException()
-        }
     }
 
     override fun push(item: L) {
